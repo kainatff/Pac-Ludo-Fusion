@@ -1,4 +1,5 @@
-🧩 Pac Ludo Fusion 
+🧩 # Pac Ludo Fusion 
+
 Pac Ludo Fusion is a dynamic Pac-Man-inspired maze game built with pygame, where players collect pellets, avoid AI-controlled ghosts, and navigate a rotating hexagonal maze. It combines pathfinding, decision-making AI, and reinforcement learning to create intelligent ghost behaviors and an engaging challenge for players.
 🎮 Features
 Hex-based Maze: A hexagonal grid offers a twist on the classic square maze layout.
