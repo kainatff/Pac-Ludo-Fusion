@@ -40,6 +40,19 @@ class DynamicMaze:
     def count_pellets(self):
         return sum(tile.pellets for row in self.tiles for tile in row)
 
-# Test render (no game loop)
-if __name__ == "__main__":
-    print("Maze and HexTile classes are ready.")
+
+class Player:
+    def _init_(self, color):
+        self.tokens = []
+        self.score = 0
+        self.color = color
+        self.home_position = (0, 0)
+        self.lives = 5
+        self.invincible = 0
+
+# Simple test for player + maze init
+if _name_ == "_main_":
+    maze = DynamicMaze()
+    player1 = Player((255, 0, 0))
+    print(f"Player 1 initialized with color {player1.color}")
+    print(f"Pellets in maze: {maze.count_pellets()}")
