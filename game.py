@@ -83,6 +83,9 @@ class Ghost:
         self.ai = self._init_ai()
         self.speed = 0.5  # Slower movement speed
         
+        self.last_move_time = 0
+        self.move_delay = 300
+        
     def _init_ai(self):
         if self.ai_type == 'minimax':
             return MinimaxAI(depth=1)  # Reduced difficulty
@@ -93,8 +96,9 @@ class Ghost:
         return None
         
     def make_move(self, game_state):
-        # Only move every other frame (slower movement)
-        if pygame.time.get_ticks() % 2 == 0 and self.ai:
+        current_time = pygame.time.get_ticks()
+        if self.ai and current_time - self.last_move_time > self.move_delay:
+            self.last_move_time = current_time
             return self.ai.decide_move(game_state, self.position)
         return self.position
 
@@ -235,26 +239,35 @@ class QLearningAI:
             tf.keras.layers.Dense(4)
         ])
         self.model.compile(optimizer='adam', loss='mse')
-        
-    def decide_move(self, game_state, current_pos):
+
+    def decide_move(self, game_state, current_pos):  # Make sure this is inside the class
         if not game_state['players'][0].tokens:
             return current_pos
-            
+        
         state_vector = self._process_state(game_state, current_pos)
         q_values = self.model.predict(state_vector[np.newaxis], verbose=0)
         action = np.argmax(q_values[0])
-    
-        # Map index to direction
+
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
         dx, dy = directions[action]
-    
         new_pos = (current_pos[0] + dx, current_pos[1] + dy)
-    
-        # Ensure new position is within bounds and not obstacle
+
         if (0 <= new_pos[0] < game_state['maze'].size and
             0 <= new_pos[1] < game_state['maze'].size and
             not game_state['maze'].tiles[new_pos[0]][new_pos[1]].obstacle):
             return new_pos
+        else:
+            # If chosen move is invalid, pick a random valid direction
+            valid_moves = []
+            for dxi, dyi in directions:
+                candidate_pos = (current_pos[0] + dxi, current_pos[1] + dyi)
+                if (0 <= candidate_pos[0] < game_state['maze'].size and
+                    0 <= candidate_pos[1] < game_state['maze'].size and
+                    not game_state['maze'].tiles[candidate_pos[0]][candidate_pos[1]].obstacle):
+                    valid_moves.append(candidate_pos)
+            if valid_moves:
+                return random.choice(valid_moves)
+
         return current_pos
     
     def _process_state(self, state, current_pos):
@@ -882,7 +895,7 @@ class AStarPathfinder:
 
 
 # Simple test for player + maze init
-if _name_ == "_main_":
+if __name__ == "_main_":
     maze = DynamicMaze()
     player1 = Player((255, 0, 0))
     pathfinder = AStarPathfinder()
