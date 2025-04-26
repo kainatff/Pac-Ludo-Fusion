@@ -736,18 +736,17 @@ class GameController:
             self.clock.tick(30)
 
     def run_game(self):
-        # Show homepage first
         self.show_homepage()
-        
+    
         # Then show tutorial
         self.show_tutorial()
-        
+    
         # Then start main game
         self.state = "game"
         self.game_time = pygame.time.get_ticks()
         self.last_shift_time = self.game_time
-        self.last_move_time = self.game_time
-        
+        self.last_move_time = self.game_time  # Track last move time
+    
         running = True
         while running:
             current_time = pygame.time.get_ticks()
@@ -761,23 +760,29 @@ class GameController:
                     current_tile = player.tokens[0]
                     x, y = current_tile.grid_pos
                     
-                    # Check for key presses and move one tile at a time
-                    if keys[K_w] and y > 0 and not self.maze.tiles[x][y-1].obstacle:
-                        player.tokens[0] = self.maze.tiles[x][y-1]
-                        self._check_pellet_collision(self.maze.tiles[x][y-1])
-                        self._check_destination_reached(self.maze.tiles[x][y-1])
-                    elif keys[K_s] and y < self.maze.size-1 and not self.maze.tiles[x][y+1].obstacle:
-                        player.tokens[0] = self.maze.tiles[x][y+1]
-                        self._check_pellet_collision(self.maze.tiles[x][y+1])
-                        self._check_destination_reached(self.maze.tiles[x][y+1])
-                    elif keys[K_a] and x > 0 and not self.maze.tiles[x-1][y].obstacle:
-                        player.tokens[0] = self.maze.tiles[x-1][y]
-                        self._check_pellet_collision(self.maze.tiles[x-1][y])
-                        self._check_destination_reached(self.maze.tiles[x-1][y])
-                    elif keys[K_d] and x < self.maze.size-1 and not self.maze.tiles[x+1][y].obstacle:
-                        player.tokens[0] = self.maze.tiles[x+1][y]
-                        self._check_pellet_collision(self.maze.tiles[x+1][y])
-                        self._check_destination_reached(self.maze.tiles[x+1][y])
+                    # Only move after 200 ms (one tile at a time)
+                    if current_time - self.last_move_time >= 200:
+                        # Check for key presses and move one tile at a time
+                        if keys[K_w] and y > 0 and not self.maze.tiles[x][y-1].obstacle:
+                            player.tokens[0] = self.maze.tiles[x][y-1]
+                            self._check_pellet_collision(self.maze.tiles[x][y-1])
+                            self._check_destination_reached(self.maze.tiles[x][y-1])
+                            self.last_move_time = current_time  # Update move time
+                        elif keys[K_s] and y < self.maze.size-1 and not self.maze.tiles[x][y+1].obstacle:
+                            player.tokens[0] = self.maze.tiles[x][y+1]
+                            self._check_pellet_collision(self.maze.tiles[x][y+1])
+                            self._check_destination_reached(self.maze.tiles[x][y+1])
+                            self.last_move_time = current_time  # Update move time
+                        elif keys[K_a] and x > 0 and not self.maze.tiles[x-1][y].obstacle:
+                            player.tokens[0] = self.maze.tiles[x-1][y]
+                            self._check_pellet_collision(self.maze.tiles[x-1][y])
+                            self._check_destination_reached(self.maze.tiles[x-1][y])
+                            self.last_move_time = current_time  # Update move time
+                        elif keys[K_d] and x < self.maze.size-1 and not self.maze.tiles[x+1][y].obstacle:
+                            player.tokens[0] = self.maze.tiles[x+1][y]
+                            self._check_pellet_collision(self.maze.tiles[x+1][y])
+                            self._check_destination_reached(self.maze.tiles[x+1][y])
+                            self.last_move_time = current_time  # Update move time
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -789,7 +794,7 @@ class GameController:
                             self.state = "game"
                             self.game_time = current_time
                             self.last_shift_time = current_time
-                            self.last_move_time = current_time
+                            self.last_move_time = current_time  # Reset last move time
 
             self.screen.fill(BLACK)
             if self.state == "game":
