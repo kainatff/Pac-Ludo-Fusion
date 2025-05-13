@@ -81,26 +81,37 @@ class Ghost:
         self.color = GHOST_COLORS[color_index]
         self.position = (0, 0)
         self.ai = self._init_ai()
-        self.speed = 0.5  # Slower movement speed
-        
+
         self.last_move_time = 0
-        self.move_delay = 300
-        
+        self.move_delay = 400  # 400ms = one tile every 0.4s, slower
+
     def _init_ai(self):
         if self.ai_type == 'minimax':
-            return MinimaxAI(depth=1)  # Reduced difficulty
+            return MinimaxAI(depth=1)
         elif self.ai_type == 'a_star':
             return AStarPathfinder()
         elif self.ai_type == 'rl':
             return QLearningAI()
         return None
-        
+
     def make_move(self, game_state):
         current_time = pygame.time.get_ticks()
         if self.ai and current_time - self.last_move_time > self.move_delay:
             self.last_move_time = current_time
-            return self.ai.decide_move(game_state, self.position)
+
+            next_pos = self.ai.decide_move(game_state, self.position)
+
+            # Ensure movement is only one tile away
+            if next_pos and self._is_adjacent(self.position, next_pos):
+                self.position = next_pos
+
         return self.position
+
+    def _is_adjacent(self, pos1, pos2):
+        """Allow only up/down/left/right by one tile."""
+        dx = abs(pos1[0] - pos2[0])
+        dy = abs(pos1[1] - pos2[1])
+        return (dx == 1 and dy == 0) or (dx == 0 and dy == 1)
 
 class PopUpText:
     def __init__(self, text, position, color, duration=60, size=24):
@@ -336,7 +347,6 @@ class GameController:
                     break
 
     def _init_positions(self):
-        # Player 1 starts at top-left, Player 2 at bottom-right
         for idx, player in enumerate(self.players):
             start_x = 1 if idx == 0 else self.maze.size - 2
             start_y = 1 if idx == 0 else self.maze.size - 2
@@ -620,7 +630,7 @@ class GameController:
             self.last_shift_time = current_time
             # After shifting, we might want to set a new destination
             # But for now, keep the same destination (it moves with the maze)
-            
+
             # Show shift warning
             warning = PopUpText("Maze Shifted!", (400, 300), YELLOW, 60, 32)
             self.popups.append(warning)
