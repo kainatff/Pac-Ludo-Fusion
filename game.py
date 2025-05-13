@@ -513,25 +513,12 @@ class GameController:
 
     def _draw_homepage(self):
         title_text = self.title_font.render("Hex Maze Chase", True, YELLOW)
-        instruction_lines = [
-            "How to Play:",
-            "- Use W A S D to move your player (RED)",
-            "- Collect pellets on the tiles (YELLOW)",
-            "- Reach the PURPLE destination to win",
-            "- Avoid the ghosts:",
-            "  - RED: Minimax (predicts your moves)",
-            "  - CYAN: A* (efficient pathfinding)",
-            "  - PINK: RL (learning AI)",
-            "- Tiles rotate every 15 seconds",
-            "- You have 5 lives",
-            "",
-            "Collect pellets to gain extra lives!"
-        ]
+        
         self.screen.blit(title_text, (500 - title_text.get_width() // 2, 50))
 
-        for idx, line in enumerate(instruction_lines):
-            text = self.font.render(line, True, WHITE)
-            self.screen.blit(text, (150, 150 + idx * 30))
+        cover_image = pygame.image.load("cover.jpg")  # Ensure this path is correct
+        cover_image = pygame.transform.scale(cover_image, (600, 400))  # Resize if needed
+        self.screen.blit(cover_image, (200, 150))  # Adjust position as needed
 
         # Draw Start button
         self._start_button_rect = pygame.Rect(400, 600, 200, 50)
