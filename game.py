@@ -671,17 +671,18 @@ class GameController:
         for popup in self.popups:
             popup.draw(self.screen)
 
-        # Draw HUD
+    # Draw HUD
         score_text = self.font.render(f"Score: {self.players[0].score}", True, WHITE)
         lives_text = self.font.render(f"Lives: {self.players[0].lives}", True, WHITE)
         pellets_text = self.font.render(f"Pellets: {self.maze.count_pellets()}", True, WHITE)
         time_text = self.font.render(f"Time: {(current_time - self.game_time)//1000}s", True, WHITE)
-        
+        quit_text = self.font.render("Press X to Quit", True, WHITE)  # <-- New quit hint
+
         self.screen.blit(score_text, (20, 20))
         self.screen.blit(lives_text, (20, 50))
         self.screen.blit(pellets_text, (20, 80))
         self.screen.blit(time_text, (20, 110))
-
+        self.screen.blit(quit_text, (20, 140))  # <-- Display quit hint in HUD
         # Draw invincibility indicator
         if self.players[0].invincible > 0:
             invinc_text = self.font.render(f"Invincible: {self.players[0].invincible//30}s", True, GREEN)
@@ -737,6 +738,13 @@ class GameController:
                     if event.key == pygame.K_x and self.game_over:
                         pygame.quit()
                         sys.exit()
+       
+                if event.type == pygame.KEYDOWN:
+        # Allow quitting anytime with 'X'
+                    if event.key == pygame.K_x:  
+                        self.return_to_homepage()
+        
+       
             self.clock.tick(30)
 
     def run_game(self):
@@ -803,6 +811,10 @@ class GameController:
                         if event.key == pygame.K_x and self.game_over:
                             pygame.quit()
                             sys.exit()    
+                        if event.type == pygame.KEYDOWN:
+        # Allow quitting anytime with 'X'
+                            if event.key == pygame.K_x:  
+                                self.return_to_homepage()
 
             self.screen.fill(BLACK)
             if self.state == "game":
