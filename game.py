@@ -4,6 +4,7 @@ import heapq
 import tensorflow as tf
 from pygame.locals import *
 import random
+import sys
 
 # Initialize Pygame and colors
 pygame.init()
@@ -697,6 +698,7 @@ class GameController:
             color = GREEN if self.victory else RED
             game_over_text = self.title_font.render(message, True, color)
             restart_text = self.font.render("Press R to restart", True, WHITE)
+            exit_text = self.font.render("Press X to exit", True, WHITE)
             
             # Semi-transparent overlay
             s = pygame.Surface((1000, 800), pygame.SRCALPHA)
@@ -704,17 +706,19 @@ class GameController:
             self.screen.blit(s, (0, 0))
             
             self.screen.blit(game_over_text, 
-                           (500 - game_over_text.get_width()//2, 
+                        (500 - game_over_text.get_width()//2, 
                             300 - game_over_text.get_height()//2))
             self.screen.blit(restart_text,
-                           (500 - restart_text.get_width()//2,
+                        (500 - restart_text.get_width()//2,
                             350 - restart_text.get_height()//2))
+            self.screen.blit(exit_text,
+                        (500 - exit_text.get_width()//2,
+                            380 - exit_text.get_height()//2))
             
             final_score = self.font.render(f"Final Score: {self.players[0].score}", True, WHITE)
             self.screen.blit(final_score,
-                           (500 - final_score.get_width()//2,
-                            400 - final_score.get_height()//2))
-
+                        (500 - final_score.get_width()//2,
+                            430 - final_score.get_height()//2))
     def show_homepage(self):
         running = True
         while running:
@@ -729,7 +733,10 @@ class GameController:
                 if event.type == MOUSEBUTTONDOWN:
                     if hasattr(self, '_start_button_rect') and self._start_button_rect.collidepoint(event.pos):
                         running = False
-            
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_x and self.game_over:
+                        pygame.quit()
+                        sys.exit()
             self.clock.tick(30)
 
     def run_game(self):
@@ -792,6 +799,10 @@ class GameController:
                             self.game_time = current_time
                             self.last_shift_time = current_time
                             self.last_move_time = current_time  # Reset last move time
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_x and self.game_over:
+                            pygame.quit()
+                            sys.exit()    
 
             self.screen.fill(BLACK)
             if self.state == "game":
