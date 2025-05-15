@@ -524,12 +524,18 @@ class GameController:
 
     def _draw_homepage(self):
         title_text = self.title_font.render("Hex Maze Chase", True, YELLOW)
-        
         self.screen.blit(title_text, (500 - title_text.get_width() // 2, 50))
 
-        cover_image = pygame.image.load("cover.jpg")  # Ensure this path is correct
-        cover_image = pygame.transform.scale(cover_image, (600, 400))  # Resize if needed
-        self.screen.blit(cover_image, (200, 150))  # Adjust position as needed
+        # Try to load cover image, fall back to a placeholder if missing
+        try:
+            cover_image = pygame.image.load("cover.jpg")
+            cover_image = pygame.transform.scale(cover_image, (600, 400))
+            self.screen.blit(cover_image, (200, 150))
+        except pygame.error:
+            # Draw a placeholder rectangle if image is missing
+            pygame.draw.rect(self.screen, (50, 50, 50), (200, 150, 600, 400))
+            placeholder_text = self.font.render("Cover Image Missing", True, WHITE)
+            self.screen.blit(placeholder_text, (400, 300))
 
         # Draw Start button
         self._start_button_rect = pygame.Rect(400, 600, 200, 50)
@@ -539,7 +545,6 @@ class GameController:
             self._start_button_rect.centerx - button_text.get_width() // 2,
             self._start_button_rect.centery - button_text.get_height() // 2
         ))
-
     def _handle_input(self, event):
         player = self.players[0]
         if not player.tokens or self.game_over:
@@ -736,25 +741,19 @@ class GameController:
             self.screen.fill(BLACK)
             self._draw_homepage()
             pygame.display.flip()
-            
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
-                    return
+                    sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     if hasattr(self, '_start_button_rect') and self._start_button_rect.collidepoint(event.pos):
-                        running = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_x and self.game_over:
+                        running = False  # Exit homepage to proceed to tutorial
+                if event.type == KEYDOWN:
+                    if event.key == K_x:
                         pygame.quit()
                         sys.exit()
-       
-                if event.type == pygame.KEYDOWN:
-        # Allow quitting anytime with 'X'
-                    if event.key == pygame.K_x:  
-                        self.return_to_homepage()
-        
-       
+
             self.clock.tick(30)
             
     def return_to_homepage(self):
