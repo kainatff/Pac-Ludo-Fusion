@@ -747,8 +747,10 @@ class GameController:
                     pygame.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
+                    print(f"Mouse clicked at: {event.pos}")  # Debug
                     if hasattr(self, '_start_button_rect') and self._start_button_rect.collidepoint(event.pos):
-                        running = False  # Exit homepage to proceed to tutorial
+                        print("Start Game button clicked!")  # Debug
+                        running = False  # Exit to proceed to tutorial
                 if event.type == KEYDOWN:
                     if event.key == K_x:
                         pygame.quit()
@@ -771,31 +773,50 @@ class GameController:
         self.last_shift_time = pygame.time.get_ticks()
         self.popups = []
     def run_game(self):
-        self.show_homepage()
-        self.show_tutorial()
-        self.state = "game"
-        self.game_time = pygame.time.get_ticks()
-        self.last_shift_time = self.game_time
-        self.last_move_time = self.game_time
-    
         running = True
         while running:
             current_time = pygame.time.get_ticks()
             dt = self.clock.tick(60)
-        
-        # Handle continuous key presses for movement
-            keys = pygame.key.get_pressed()
+
+            # Handle events for all states
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    running = False
+                elif self.state == "home":
+                    if event.type == MOUSEBUTTONDOWN:
+                        print(f"Mouse clicked at: {event.pos}")  # Debug
+                        if hasattr(self, '_start_button_rect') and self._start_button_rect.collidepoint(event.pos):
+                            print("Start Game button clicked!")  # Debug
+                            self.show_tutorial()
+                            self.state = "game"
+                            self.game_time = pygame.time.get_ticks()
+                            self.last_shift_time = self.game_time
+                            self.last_move_time = self.game_time
+                    if event.type == KEYDOWN:
+                        if event.key == K_x:
+                            pygame.quit()
+                            sys.exit()
+                elif self.state == "game":
+                    if event.type == KEYDOWN:
+                        if self.game_over and event.key == K_r:
+                            self.__init__()
+                            self.state = "game"
+                            self.game_time = current_time
+                            self.last_shift_time = current_time
+                            self.last_move_time = current_time
+                        elif event.key == K_x:
+                            self.return_to_homepage()
+
+            # Handle continuous key presses for movement in game state
             if self.state == "game" and not self.game_over:
+                keys = pygame.key.get_pressed()
                 player = self.players[0]
                 if player.tokens:
                     current_tile = player.tokens[0]
                     x, y = current_tile.grid_pos
-                
-                # Only move after move_delay milliseconds (one tile at a time)
+
                     if current_time - self.last_move_time >= self.move_delay:
                         moved = False
-                    
-                    # Check each movement direction
                         if keys[K_w] and y > 0:
                             new_tile = self.maze.tiles[x][y-1]
                             if not new_tile.obstacle:
@@ -824,38 +845,20 @@ class GameController:
                                 self._check_pellet_collision(new_tile)
                                 self._check_destination_reached(new_tile)
                                 moved = True
-                    
                         if moved:
                             self.last_move_time = current_time
 
-        # Handle maze shifting
-            if current_time - self.last_shift_time > 15000:
+            # Handle maze shifting
+            if self.state == "game" and current_time - self.last_shift_time > 15000:
                 self.maze.shift_tiles()
                 self.last_shift_time = current_time
-            
-            # Refresh player's tile reference after shift
                 if self.players[0].tokens:
                     x, y = self.players[0].tokens[0].grid_pos
                     self.players[0].tokens[0] = self.maze.tiles[x][y]
-            
-            # Show shift warning
                 warning = PopUpText("Maze Shifted!", (400, 300), YELLOW, 60, 32)
                 self.popups.append(warning)
 
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    running = False
-                elif self.state == "game":
-                    if event.type == KEYDOWN:
-                        if self.game_over and event.key == K_r:
-                            self.__init__()
-                            self.state = "game"
-                            self.game_time = current_time
-                            self.last_shift_time = current_time
-                            self.last_move_time = current_time
-                        elif event.key == K_x:
-                            self.return_to_homepage()
-
+            # Render based on state
             self.screen.fill(BLACK)
             if self.state == "home":
                 self._draw_homepage()
@@ -865,8 +868,9 @@ class GameController:
                 self._draw_interface(current_time)
 
             pygame.display.flip()
-    
+
         pygame.quit()
+        
 if __name__ == "__main__":
     game = GameController()
     game.run_game()
