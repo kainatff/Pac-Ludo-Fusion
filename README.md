@@ -1,110 +1,107 @@
-🧩 # Pac Ludo Fusion 
+# 🧩 Pac Ludo Fusion
 
-Pac Ludo Fusion is a dynamic Pac-Man-inspired maze game built with pygame, where players collect pellets, avoid AI-controlled ghosts, and navigate a rotating hexagonal maze. It combines pathfinding, decision-making AI, and reinforcement learning to create intelligent ghost behaviors and an engaging challenge for players.
-🎮 Features
-Hex-based Maze: A hexagonal grid offers a twist on the classic square maze layout.
+**Pac Ludo Fusion** is a modern AI-enhanced maze game inspired by the classic **Pac-Man**, developed using **Pygame**. Players navigate a **rotating hexagonal maze**, collect pellets, and avoid intelligent AI-controlled ghosts. With each ghost powered by different algorithms—**Minimax**, **A\***, and **Q-learning**—the game blends strategic movement with real-time decision-making, offering a challenging and engaging experience.
 
+---
 
-Dynamic Maze Rotation: The entire maze rotates every 15 seconds, changing paths and strategies.
+## 🎮 Features
 
+* **🔷 Hexagonal Grid Maze**
+  A unique hex-tile layout replaces the traditional square maze, creating complex movement paths and a fresh spatial experience.
 
-Pellet Collection: Eat yellow pellets to score points and occasionally freeze ghosts.
+* **🔁 Dynamic Maze Rotation**
+  The entire maze rotates **every 15 seconds**, altering all paths and forcing both the player and AI to re-strategize constantly.
 
+* **🔸 Pellet Collection**
+  Collect yellow pellets to score points. Every 50 pellets grants an **extra life**, and some pellets temporarily **freeze ghosts**.
 
-Player Invincibility: Players get temporary invincibility on respawn.
+* **🛡️ Player Invincibility**
+  On respawn or life loss, players gain a few seconds of invincibility to recover and reposition.
 
+* **👻 Smart AI-Controlled Ghosts**
 
-Smart Ghosts:
+  * 🔴 **Minimax Ghost**: Uses the Minimax algorithm to predict and intercept your next moves.
+  * 🟦 **A\* Ghost**: Efficiently calculates the shortest path using the A\* pathfinding algorithm.
+  * 💗 **RL Ghost**: Trained with **Q-learning** and **TensorFlow**, this ghost learns and adapts during gameplay.
 
+---
 
-🔴 Minimax Ghost: Predicts your moves using the minimax algorithm.
+## 🕹️ Controls
 
+| Key | Action                        |
+| --- | ----------------------------- |
+| W   | Move Up                       |
+| A   | Move Left                     |
+| S   | Move Down                     |
+| D   | Move Right                    |
+| R   | Restart Game (after win/loss) |
 
-🟦 A Ghost*: Finds shortest paths using A* pathfinding.
+* Click **"Start Game"** on the home screen to begin.
 
+---
 
-💗 RL Ghost: Learns optimal moves via Q-learning and a neural network.
+## 🧠 AI Technologies Used
 
+* **A\* Pathfinding**: Ensures shortest-path pursuit to the player.
+* **Minimax Algorithm**: Simulates future moves to trap the player.
+* **Q-Learning (Reinforcement Learning)**: The RL ghost learns through trial and error using a TensorFlow-based neural network.
 
-🕹️ Controls
-Move using:
+---
 
+## 📦 Requirements
 
-W: Up
+Install dependencies using pip (preferably in a virtual environment):
 
-
-A: Left
-
-
-S: Down
-
-
-D: Right
-
-
-From the home screen, click Start Game to begin.
-
-
-Press R to restart after Game Over or Victory.
-
-
-🧠 AI Technologies Used
-A* Pathfinding – For shortest-path movement.
-
-
-Minimax Algorithm – For predictive decision-making.
-
-
-Reinforcement Learning – Ghost learns optimal paths via a TensorFlow-based Q-network.
-
-
-📦 Requirements
-Install the following packages (preferably in a virtual environment):
+```bash
 pip install pygame numpy tensorflow
+```
 
-🚀 Run the Game
+---
+
+## 🚀 Running the Game
+
+Execute the following command in your terminal:
+
+```bash
 python game.py
+```
 
-🧩 Game Objective
-Collect all pellets while avoiding ghosts.
+---
 
+## 🧩 Game Objective
 
-Maze rotates to challenge your spatial reasoning.
+* Collect **all pellets** to win.
+* Avoid being caught by the AI ghosts.
+* **Survive** with your **5 lives** and aim for the **highest score** possible.
+* Adapt to the constantly shifting maze layout.
 
+---
 
-Survive with your 5 lives and aim for the highest score!
+## 📸 Screenshots
+![image](https://github.com/user-attachments/assets/a16e4089-033c-44ec-a42a-a63949f4361e)
+![image](https://github.com/user-attachments/assets/cbf3daec-e71c-4c26-84b8-76cad413591f)
+![image](https://github.com/user-attachments/assets/b2c4ccf4-ad1e-4525-b5d5-999cde217a21)
+![image](https://github.com/user-attachments/assets/70c51ced-7678-4d0c-8eb2-42f4984934dd)
 
+---
+## 🧠 Inspiration
 
-📸 Screenshots
-(Optional – add screenshots showing the maze, gameplay, and ghost behavior.)
-📁 File Structure
-game.py – Main game logic and AI implementations
+This game draws inspiration from the original **Pac-Man**, but reimagines it through the lens of modern artificial intelligence. The **rotating maze** and **diverse AI ghosts** introduce new layers of challenge, pushing both the player and algorithms to adapt dynamically.
 
+---
 
-HexTile, DynamicMaze, Player, Ghost – Core game objects
+## 🛠️ Future Improvements
 
+* ✅ Multiplayer support for co-op or versus mode
+* ✅ Persistent high score system
+* ✅ Advanced animations and sound design
+* ✅ Improved Q-learning with saved training sessions
+* ✅ Additional power-ups (e.g., speed boost, ghost freeze)
 
-AStarPathfinder, MinimaxAI, QLearningAI – AI engines for ghosts
+---
 
+## 📜 License
 
-GameController – Handles drawing, inputs, states, and gameplay
-
-
-🧠 Inspiration
-Inspired by Pac-Man, but reimagined with a modern AI twist and a rotating maze mechanic to encourage adaptability and strategy.
-🛠️ Future Improvements
-Multiplayer support
-
-
-Save/load high scores
-
-
-Enhanced animations and sound effects
-
-
-Better-trained Q-learning agent with persistent learning
-
-
-📜 License
-GNU License — feel free to use, modify, and share!
+**GNU General Public License (GPL)**
+Feel free to use, modify, and distribute this project.
 
