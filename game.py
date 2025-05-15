@@ -756,6 +756,21 @@ class GameController:
         
        
             self.clock.tick(30)
+            
+    def return_to_homepage(self):
+        """Return to the homepage, resetting necessary game states."""
+        self.state = "home"  # Set state to homepage
+        self.game_over = False  # Reset game over status
+        self.victory = False  # Reset victory status
+        # Optionally reset player and maze if needed
+        self.players[0].score = 0
+        self.players[0].lives = 5
+        self.players[0].pellets_collected = 0
+        self.maze = DynamicMaze()  # Create a new maze
+        self._init_positions()  # Reset player and ghost positions
+        self.set_new_destination()  # Set a new destination
+        self.last_shift_time = pygame.time.get_ticks()
+        self.popups = []
     def run_game(self):
         self.show_homepage()
         self.show_tutorial()
@@ -840,14 +855,12 @@ class GameController:
                             self.last_shift_time = current_time
                             self.last_move_time = current_time
                         elif event.key == K_x:
-                            if self.game_over:
-                                pygame.quit()
-                                sys.exit()
-                            else:
-                                self.return_to_homepage()
+                            self.return_to_homepage()
 
             self.screen.fill(BLACK)
-            if self.state == "game":
+            if self.state == "home":
+                self._draw_homepage()
+            elif self.state == "game":
                 if not self.game_over:
                     self._update_game(dt, current_time)
                 self._draw_interface(current_time)
