@@ -86,7 +86,7 @@ python game.py
 ---
 ## 🧠 Inspiration
 
-This game draws inspiration from the original **Pac-Man**, but reimagines it through the lens of modern artificial intelligence. The **rotating maze** and **diverse AI ghosts** introduce new layers of challenge, pushing both the player and algorithms to adapt dynamically.
+This game reimagines the classic **Pac-Man** through a fusion with **Ludo**, blending fast-paced maze navigation with strategic token-based gameplay. Drawing from Ludo’s mechanics, players guide tokens from a home position to a destination, making calculated moves to outmaneuver AI opponents, reminiscent of Ludo’s competitive board dynamics. The rotating hexagonal maze and diverse AI ghosts—powered by **Minimax**, **A*pathfinding**, and **Q-learning**—introduce unpredictable challenges, forcing players to adapt dynamically as the maze shifts. This hybrid design pushes both players and algorithms to balance Pac-Man’s reflex-driven pellet collection with Ludo’s thoughtful path planning, creating a unique, AI-enhanced experience.
 
 ---
 
